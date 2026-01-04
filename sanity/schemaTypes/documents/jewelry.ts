@@ -30,7 +30,7 @@ export const jewelry = defineType({
     defineField({
       name: 'price',
       type: 'number',
-      validation: (rule) => rule.required().positive(),
+      //validation: (rule) => rule.required().positive(),//
     }),
     defineField({
       name: 'available',
