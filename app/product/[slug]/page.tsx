@@ -7,9 +7,15 @@ import { useParams, useRouter } from 'next/navigation';
 import { client } from '@/sanity/lib/client';
 import imageUrlBuilder from '@sanity/image-url';
 
-const builder = imageUrlBuilder(client);
 function urlFor(source: any) {
-  return builder.image(source);
+  if (!source) return null;
+  try {
+    const builder = imageUrlBuilder(client);
+    return builder.image(source);
+  } catch (error) {
+    console.error('Error creating image URL:', error);
+    return null;
+  }
 }
 
 interface Product {
@@ -151,9 +157,9 @@ export default function ProductPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square w-full bg-neutral-900 rounded-lg overflow-hidden">
-              {mainImage ? (
+              {mainImage && urlFor(mainImage) ? (
                 <Image
-                  src={urlFor(mainImage).url()}
+                  src={urlFor(mainImage)!.url()}
                   alt={product.title}
                   fill
                   className="object-contain p-4"
@@ -179,12 +185,14 @@ export default function ProductPage() {
                         : 'border-transparent hover:border-gray-600'
                     }`}
                   >
-                    <Image
-                      src={urlFor(image).width(200).height(200).url()}
-                      alt={`${product.title} - Image ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
+                    {urlFor(image) && (
+                      <Image
+                        src={urlFor(image)!.width(200).height(200).url()}
+                        alt={`${product.title} - Image ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
                   </button>
                 ))}
               </div>

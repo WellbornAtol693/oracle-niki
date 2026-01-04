@@ -6,9 +6,15 @@ import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
 import imageUrlBuilder from '@sanity/image-url';
 
-const builder = imageUrlBuilder(client);
 function urlFor(source: any) {
-  return builder.image(source);
+  if (!source) return null;
+  try {
+    const builder = imageUrlBuilder(client);
+    return builder.image(source);
+  } catch (error) {
+    console.error('Error creating image URL:', error);
+    return null;
+  }
 }
 
 export default function Shop() {
@@ -99,9 +105,9 @@ export default function Shop() {
             {clothing.map((product) => (
               <Link href={`/product/${product.slug?.current || product._id}`} key={product._id}>
                 <div className="bg-neutral-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-200 ease-in-out cursor-pointer">
-                  {product.images && product.images[0] && (
+                  {product.images && product.images[0] && urlFor(product.images[0]) && (
                     <Image
-                      src={urlFor(product.images[0]).url()}
+                      src={urlFor(product.images[0])!.url()}
                       alt={product.title || 'Clothing item'}
                       width={400}
                       height={400}
@@ -131,9 +137,9 @@ export default function Shop() {
             {jewelry.map((product) => (
               <Link href={`/product/${product.slug?.current || product._id}`} key={product._id}>
                 <div className="bg-neutral-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-200 ease-in-out cursor-pointer">
-                  {product.images && product.images[0] && (
+                  {product.images && product.images[0] && urlFor(product.images[0]) && (
                     <Image
-                      src={urlFor(product.images[0]).url()}
+                      src={urlFor(product.images[0])!.url()}
                       alt={product.title || 'Jewelry item'}
                       width={400}
                       height={400}
@@ -163,9 +169,9 @@ export default function Shop() {
             {prints.map((product) => (
               <Link href={`/product/${product.slug?.current || product._id}`} key={product._id}>
                 <div className="bg-neutral-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-200 ease-in-out cursor-pointer">
-                  {product.images && product.images[0] && (
+                  {product.images && product.images[0] && urlFor(product.images[0]) && (
                     <Image
-                      src={urlFor(product.images[0]).url()}
+                      src={urlFor(product.images[0])!.url()}
                       alt={product.title || 'Print'}
                       width={400}
                       height={400}
